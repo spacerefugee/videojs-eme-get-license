@@ -6,14 +6,14 @@ Samples of 'getLicense' function of [videojs-contrib-eme](https://github.com/vid
 
 Example:
 
-``` javascript
+```javascript
 player.src({
-    src: '<your url here>',
-    type: 'application/dash+xml',
-    keySystems: {
-        'com.widevine.alpha': '<YOUR URL HERE>',
-        'com.microsoft.playready': '<YOUR_KEY_URL>'
-	}
+  src: "<your url here>",
+  type: "application/dash+xml",
+  keySystems: {
+    "com.widevine.alpha": "<YOUR URL HERE>",
+    "com.microsoft.playready": "<YOUR_KEY_URL>"
+  }
 });
 ```
 
@@ -33,54 +33,79 @@ Example:
 
 ```javascript
 player.src({
-    src: 'https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd',
-    type: 'application/dash+xml',
-    keySystems: {
-        "com.microsoft.playready": {
-            url: 'https://drm-playready-licensing.axtest.net/AcquireLicense',
-            licenseHeaders: {
-                'X-AxDRM-Message': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA'
-            }
-        },
-        "com.widevine.alpha": {
-            url: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
-            licenseHeaders: {
-                'X-AxDRM-Message': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA'
-            }
-        }
+  src: "https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd",
+  type: "application/dash+xml",
+  keySystems: {
+    "com.microsoft.playready": {
+      url: "https://drm-playready-licensing.axtest.net/AcquireLicense",
+      licenseHeaders: {
+        "X-AxDRM-Message":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA"
+      }
+    },
+    "com.widevine.alpha": {
+      url: "https://drm-widevine-licensing.axtest.net/AcquireLicense",
+      licenseHeaders: {
+        "X-AxDRM-Message":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA"
+      }
     }
+  }
 });
-
 ```
 
 ## Parameter Authentication
 
-
-
 ## Wrapping License Requests
 
+Example([Full code](/src/licenseWrapping.js)):
+
 ```javascript
- 
- player.src({
-     src: '<your url here>',
-     type: 'application/dash+xml',
-     keySystems: {
-         "com.microsoft.playready": {
-             getLicense: (emeOptions, keyMessage, callback) => {
-                 let messageContents = getMessageContents(keyMessage);
-                 let message = messageContents.message;
-                 let headers = mergeAndRemoveNull(messageContents.headers, emeOptions.emeHeaders);
-                 message = wrapMessage(stringToUint8Array(message), this.drmToken);
-                 licenseCallback('PlayReady license server URL', headers, message, callback);
-             }
-         },
-         "com.widevine.alpha": {
-             getLicense: (emeOptions, keyMessage, callback) => {
-                 let headers = mergeAndRemoveNull({ "Content-type": "application/octet-stream" }, emeOptions.emeHeaders);
-                 keyMessage = wrapMessage(keyMessage, this.drmToken);
-                 licenseCallback('Widevine license server URL', headers, keyMessage, callback);
-             }
-         }
-     }
- });
+/**
+ * @param {ArrayBuffer} message
+ */
+function wrapMessage(message) {
+  // Create the wrapped request structure.
+  const wrapped = {};
+
+  // Encode the raw license request in base64.
+  wrapped.rawLicenseRequestBase64 = btoa(arrayBufferToString(message));
+
+  // Add whatever else we want to communicate to the server.
+  // In practice, you would send what the server needs and the server would
+  // react to it.
+  wrapped.favoriteColor = "blue";
+  wrapped.Beatles = ["John", "Paul", "George", "Ringo"];
+  wrapped.bestBeatleIndex = 1; // Paul, of course.
+  wrapped.pEqualsNP = false; // maybe?
+
+  // Encode the wrapped request as JSON.
+  const wrappedJson = JSON.stringify(wrapped);
+
+  // Convert the JSON string back into an ArrayBuffer
+  return stringToUint8Array(wrappedJson).buffer;
+}
+
+player.src({
+  src: "<your url here>",
+  type: "application/dash+xml",
+  keySystems: {
+    "com.microsoft.playready": {
+      getLicense: (emeOptions, keyMessage, callback) => {
+        let messageContents = getMessageContents(keyMessage);
+        let message = messageContents.message;
+        let headers = mergeAndRemoveNull(messageContents.headers, emeOptions.emeHeaders);
+        message = wrapMessage(stringToUint8Array(message), this.drmToken);
+        licenseCallback("PlayReady license server URL", headers, message, callback);
+      }
+    },
+    "com.widevine.alpha": {
+      getLicense: (emeOptions, keyMessage, callback) => {
+        let headers = mergeAndRemoveNull({ "Content-type": "application/octet-stream" }, emeOptions.emeHeaders);
+        keyMessage = wrapMessage(keyMessage, this.drmToken);
+        licenseCallback("Widevine license server URL", headers, keyMessage, callback);
+      }
+    }
+  }
+});
 ```
