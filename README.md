@@ -56,7 +56,7 @@ player.src({
 
 ## Parameter Authentication
 
-Example:
+Example([Full code](/src/parameterAuth.js)):
 
 ```javascript
 /**
