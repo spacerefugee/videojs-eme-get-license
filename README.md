@@ -56,6 +56,41 @@ player.src({
 
 ## Parameter Authentication
 
+Example:
+
+```javascript
+/**
+ * @param {string} uri
+ */
+function appendParam(uri) {
+  // This is the specific parameter name and value the server wants:
+  return (uri += "?CWIP-Auth-Param=VGhpc0lzQVRlc3QK");
+}
+
+player.src({
+  src: "<your url here>",
+  type: "application/dash+xml",
+  keySystems: {
+    "com.microsoft.playready": {
+      getLicense: (emeOptions, keyMessage, callback) => {
+        let messageContents = getMessageContents(keyMessage);
+        let message = messageContents.message;
+        let headers = mergeAndRemoveNull(messageContents.headers, emeOptions.emeHeaders);
+        let uri = appendParam("<PLAYREADY_LICENSE_URL>");
+        licenseCallback(uri, headers, message, callback);
+      }
+    },
+    "com.widevine.alpha": {
+      getLicense: (emeOptions, keyMessage, callback) => {
+        let headers = mergeAndRemoveNull({ "Content-type": "application/octet-stream" }, emeOptions.emeHeaders);
+        let uri = appendParam("<WIDEVINE_LICENSE_URL>");
+        licenseCallback(uri, headers, keyMessage, callback);
+      }
+    }
+  }
+});
+```
+
 ## Wrapping License Requests
 
 Example([Full code](/src/licenseWrapping.js)):
@@ -95,15 +130,15 @@ player.src({
         let messageContents = getMessageContents(keyMessage);
         let message = messageContents.message;
         let headers = mergeAndRemoveNull(messageContents.headers, emeOptions.emeHeaders);
-        message = wrapMessage(stringToUint8Array(message), this.drmToken);
-        licenseCallback("PlayReady license server URL", headers, message, callback);
+        message = wrapMessage(stringToUint8Array(message));
+        licenseCallback("<PLAYREADY_LICENSE_URL>", headers, message, callback);
       }
     },
     "com.widevine.alpha": {
       getLicense: (emeOptions, keyMessage, callback) => {
         let headers = mergeAndRemoveNull({ "Content-type": "application/octet-stream" }, emeOptions.emeHeaders);
-        keyMessage = wrapMessage(keyMessage, this.drmToken);
-        licenseCallback("Widevine license server URL", headers, keyMessage, callback);
+        keyMessage = wrapMessage(keyMessage));
+        licenseCallback("<WIDEVINE_LICENSE_URL>", headers, keyMessage, callback);
       }
     }
   }
