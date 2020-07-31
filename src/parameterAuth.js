@@ -3,6 +3,25 @@ import "videojs-contrib-eme";
 import { getMessageContents } from "videojs-contrib-eme/src/playready.js";
 import { mergeAndRemoveNull } from "videojs-contrib-eme/src/utils.js";
 
+function licenseCallback(uri, headers, body, callback) {
+  videojs.xhr(
+    {
+      uri,
+      method: "POST",
+      responseType: "arraybuffer",
+      body: body,
+      headers: headers
+    },
+    function (err, response, responseBody) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      callback(null, responseBody);
+    }
+  );
+}
+
 /**
  * @param {string} uri
  */
